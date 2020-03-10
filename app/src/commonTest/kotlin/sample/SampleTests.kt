@@ -1,5 +1,6 @@
 package sample
 
+import kotlin.jvm.JvmName
 import kotlin.test.Test
 import kotlin.test.assertTrue
 

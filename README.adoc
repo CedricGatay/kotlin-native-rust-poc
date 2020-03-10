@@ -1,0 +1,36 @@
+# Kotlin Native Rust interop
+
+This project is a Work in Progress
+
+This is a sample projet to test interop between kotlin native and a rust library.
+
+Main test target for the time being is iOS simulator
+
+## Generate rust library
+
+### Prerequisites
+
+You will need `cbindgen` to generate c headers for FFI calls `cargo install cbindgen`
+
+You will also need `cross` to be able to cross build your library `cargo install cross`
+
+### Library building
+
+Go to `rust/rust-lightning-bridge` and run the following to generate headers and library:
+
+```
+cbindgen --config cbindgen.toml --output bridge.h
+cross build --target x86_64-apple-ios --release
+```
+
+## Build iOS app
+
+Open iOS app in XCode then a run should do the trick, if you change the rust part, you will need to do a clean
+on the Kotlin project (after having rebuilt the Rust project) to ensure changes are properly taken into account.
+
+
+## Troubleshooting
+
+In case of weird linker errors, don't hesitate to change Kotlin Multiplatform plugin version.
+
+I noticed that 1.3.41 provides better error messages than 1.3.70 for instance

@@ -1,0 +1,4 @@
+headers = rust/rust-lightning-bridge/bridge.h
+staticLibraries = librust_lightning_bridge.a
+libraryPaths = rust/rust-lightning-bridge/target/x86_64-apple-ios/release/
+linkerOpts = -framework Security -framework Foundation

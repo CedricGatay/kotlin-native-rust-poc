@@ -2,6 +2,7 @@ package sample
 
 expect class Sample() {
     fun checkMe(): Int
+    fun callBridge()
 }
 
 expect object Platform {
@@ -16,4 +17,5 @@ class Proxy {
 
 fun main() {
     println(hello())
+    println(Sample().callBridge())
 }
