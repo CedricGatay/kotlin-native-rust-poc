@@ -46,6 +46,11 @@ kotlin {
                 bridge{
                     compilerOpts "-I${project.file("..")}"
                 }
+                libsecp256k1{
+                    includeDirs project.file("..")
+                    includeDirs "/usr/local/lib"
+                    //compilerOpts "-I${project.file("..")}"
+                }
             }
         }
     }

@@ -1,0 +1,4 @@
+headers = c/secp256k1/include/secp256k1_ecdh.h
+staticLibraries = libsecp256k1.a libgmp.a
+libraryPaths = c/secp256k1/.libs /usr/local/lib
+linkerOpts = -framework Security -framework Foundation
