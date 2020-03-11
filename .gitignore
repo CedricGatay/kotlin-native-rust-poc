@@ -1,0 +1,7 @@
+/app/build/*
+*.iml
+/.gradle/
+/build/*
+/.idea/
+/local.properties
+/rust/rust-lightning-bridge/.idea/
