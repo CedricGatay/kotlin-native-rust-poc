@@ -5,7 +5,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         label.text = Proxy().proxyHello()
-        Sample().callBridge()
+        DispatchQueue.main.async { self.label.text = Sample().callBridge() }
     }
 
     override func didReceiveMemoryWarning() {

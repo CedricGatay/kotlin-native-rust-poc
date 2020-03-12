@@ -1,6 +1,10 @@
 package sample
+
 import bridge.*
 import kotlinx.cinterop.*
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import libsecp256k1.*
 import platform.posix.size_tVar
 import platform.posix.uint8_tVar
@@ -8,11 +12,49 @@ import platform.posix.uint8_tVar
 actual class Sample {
     actual fun checkMe() = 7
 
-    actual fun callBridge(){
-        rustLightningBitcoinrpc.start_rust_crypto()
+    actual fun callBridge(): String {
+        val enduranceStr = openTCPSocket(
+            "endurance.acinq.co",
+            9735,
+            "0031b84c5567b126440995d3ed5aaba0565d71e1834604819ff9c17f5e9d5dd078f\n"
+        )
+        val httpStr = openTCPSocket(
+            "www.code-troopers.com",
+            80,
+            "GET / \r\n\r\n"
+        )
+        val chacha20 = callRustBridgeToChacha20()
+        return """
+            Endurance : $enduranceStr
+            ---
+            Http: $httpStr
+            ---
+            Chacha: $chacha20
+        """.trimIndent()
+        /*rustLightningBitcoinrpc.start_rust_crypto()
         callBridgeInitLightning()
-        callLibSecp256k1()
-        callRustBridgeToChacha20()
+        callLibSecp256k1()*/
+
+    }
+
+    private fun openTCPSocket(host: String, port: Int, message: String): String? {
+        println("Opening TCP connection")
+        var answer: String? = null
+        runBlocking {
+            withTimeoutOrNull(5000) {
+                val connect = NativeSocket.connect(host, port)
+                println("Socket connected : ${connect.connected}")
+                val command = message.encodeToByteArray()
+                println("Send command")
+                connect.send(command)
+                println("Socket connected : ${connect.connected}")
+                val recv = connect.suspendRecvUpTo(2000)
+                answer = recv.decodeToString()
+                println("Response ${recv.decodeToString()}")
+            }
+        }
+        println("End of TCP connection")
+        return answer
     }
 
     private fun callBridgeInitLightning() {
@@ -28,7 +70,7 @@ actual class Sample {
         full_stack_run(hexArray, hexString.count().toULong())
     }
 
-    private fun callRustBridgeToChacha20() {
+    private fun callRustBridgeToChacha20(): String? {
         println(">>> Entering call bridge")
         memScoped {
             val input = "this is kotlin speaking"
@@ -38,14 +80,9 @@ actual class Sample {
         val themeSongGenerate = theme_song_generate(8.toUByte())?.toKStringFromUtf8()
         println(">>> toKString ${themeSongGenerate}")
         val callChacha20 = call_chacha20("hello from kotlin")
-        callChacha20?.apply {
-            for (index in 0..6) {
-                println("${index} - ${this[index]}")
-            }
-        }
-        println("callChacha20 = ${callChacha20}")
         val readBytes = callChacha20?.readBytes(7)
         println("readBytes = ${readBytes?.map { it.toUByte() }}")
+        return readBytes?.decodeToString()
     }
 
     private fun callLibSecp256k1() {

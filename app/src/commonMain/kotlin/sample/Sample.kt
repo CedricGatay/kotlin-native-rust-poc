@@ -2,7 +2,7 @@ package sample
 
 expect class Sample() {
     fun checkMe(): Int
-    fun callBridge()
+    fun callBridge(): String
 }
 
 expect object Platform {
