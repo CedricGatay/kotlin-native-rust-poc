@@ -1,0 +1,4 @@
+headers = rust/rust-lightning-bitcoinrpc/bridge.h
+staticLibraries = librust_lightning_bitcoinrpc.a
+libraryPaths = rust/rust-lightning-bitcoinrpc/target/x86_64-apple-ios/release/
+linkerOpts = -framework Security -framework Foundation
